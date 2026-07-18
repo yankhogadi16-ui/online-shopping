@@ -357,6 +357,7 @@ footer{
 
 .search-bar {
   margin-bottom: 30px;
+  align-items: center;
 }
 
 .search-bar input {
