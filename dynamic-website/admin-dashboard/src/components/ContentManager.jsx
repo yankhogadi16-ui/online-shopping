@@ -16,7 +16,6 @@ function ContentManager() {
   const fetchContent = async () => {
     try {
       const response = await api.get('/content');
-      // Ensure complex fields are at least empty arrays if undefined
       const data = response.data;
       if (!data.categories) data.categories = [];
       if (!data.products) data.products = [];
@@ -80,75 +79,98 @@ function ContentManager() {
 
   return (
     <div>
-      <h2>Content Manager</h2>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
+      <div className="page-header">
+        <h2>Content Manager</h2>
+      </div>
       
-      <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+      {message && <div className="alert-success">{message}</div>}
+      
+      <div className="card-grid">
         {/* General Text Settings */}
-        <div style={{ flex: '1', minWidth: '300px', background: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
+        <div className="card">
           <h3>General Settings</h3>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontWeight: 'bold' }}>Site Title</label>
-            <input type="text" value={content.siteTitle || ''} onChange={e => handleChange('siteTitle', e.target.value)} style={{ width: '100%', padding: '0.5rem' }} />
+          <div className="form-group">
+            <label className="form-label">Site Title</label>
+            <input type="text" className="form-control" value={content.siteTitle || ''} onChange={e => handleChange('siteTitle', e.target.value)} />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontWeight: 'bold' }}>Hero Title</label>
-            <input type="text" value={content.heroTitle || ''} onChange={e => handleChange('heroTitle', e.target.value)} style={{ width: '100%', padding: '0.5rem' }} />
+          <div className="form-group">
+            <label className="form-label">Hero Title</label>
+            <input type="text" className="form-control" value={content.heroTitle || ''} onChange={e => handleChange('heroTitle', e.target.value)} />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontWeight: 'bold' }}>Hero Subtitle</label>
-            <input type="text" value={content.heroSubtitle || ''} onChange={e => handleChange('heroSubtitle', e.target.value)} style={{ width: '100%', padding: '0.5rem' }} />
+          <div className="form-group">
+            <label className="form-label">Hero Subtitle</label>
+            <input type="text" className="form-control" value={content.heroSubtitle || ''} onChange={e => handleChange('heroSubtitle', e.target.value)} />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', fontWeight: 'bold' }}>Footer Text</label>
-            <input type="text" value={content.footerText || ''} onChange={e => handleChange('footerText', e.target.value)} style={{ width: '100%', padding: '0.5rem' }} />
+          <div className="form-group">
+            <label className="form-label">Footer Text</label>
+            <input type="text" className="form-control" value={content.footerText || ''} onChange={e => handleChange('footerText', e.target.value)} />
           </div>
         </div>
 
         {/* Categories */}
-        <div style={{ flex: '1', minWidth: '300px', background: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
+        <div className="card">
           <h3>Categories</h3>
           {content.categories.map((cat, i) => (
-            <div key={cat.id} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <input type="text" value={cat.name} onChange={e => handleItemChange('categories', i, 'name', e.target.value)} style={{ flex: 1, padding: '0.5rem' }} />
-              <button onClick={() => handleRemoveItem('categories', i)} style={{ color: 'red' }}>Remove</button>
+            <div key={cat.id} className="list-item-row" style={{ marginBottom: '1rem' }}>
+              <input type="text" className="form-control" value={cat.name} onChange={e => handleItemChange('categories', i, 'name', e.target.value)} />
+              <button onClick={() => handleRemoveItem('categories', i)} className="btn btn-danger">Remove</button>
             </div>
           ))}
-          <button onClick={() => handleAddItem('categories', { name: 'New Category' })} style={{ padding: '0.5rem' }}>Add Category</button>
+          <button onClick={() => handleAddItem('categories', { name: 'New Category' })} className="btn btn-primary" style={{ marginTop: '1rem' }}>Add Category</button>
         </div>
 
         {/* Products */}
-        <div style={{ flex: '1', minWidth: '300px', background: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
+        <div className="card" style={{ gridColumn: '1 / -1' }}>
           <h3>Featured Products</h3>
-          {content.products.map((prod, i) => (
-            <div key={prod.id} style={{ border: '1px solid #ccc', padding: '0.5rem', marginBottom: '1rem' }}>
-              <input type="text" placeholder="Title" value={prod.title} onChange={e => handleItemChange('products', i, 'title', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem' }} />
-              <input type="text" placeholder="Price" value={prod.price} onChange={e => handleItemChange('products', i, 'price', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem' }} />
-              <input type="text" placeholder="Image Name/URL" value={prod.image} onChange={e => handleItemChange('products', i, 'image', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem' }} />
-              <input type="file" accept="image/*" onChange={e => handleImageUpload(i, e)} style={{ width: '100%', marginBottom: '0.5rem' }} />
-              <button onClick={() => handleRemoveItem('products', i)} style={{ color: 'red' }}>Remove Product</button>
-            </div>
-          ))}
-          <button onClick={() => handleAddItem('products', { title: 'New Product', price: 'MWK 0', image: 'placeholder.jpeg', link: '#' })} style={{ padding: '0.5rem' }}>Add Product</button>
+          <div className="card-grid">
+            {content.products.map((prod, i) => (
+              <div key={prod.id} className="list-item">
+                <input type="text" className="form-control" placeholder="Title" value={prod.title || ''} onChange={e => handleItemChange('products', i, 'title', e.target.value)} />
+                
+                <div className="list-item-row">
+                  <input type="text" className="form-control" placeholder="Price" value={prod.price || ''} onChange={e => handleItemChange('products', i, 'price', e.target.value)} />
+                  <select className="form-control" value={prod.category || ''} onChange={e => handleItemChange('products', i, 'category', e.target.value)}>
+                    <option value="">Select Category...</option>
+                    {content.categories.map(c => (
+                      <option key={c.id} value={c.name}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Image (URL or Upload)</label>
+                  <div className="list-item-row">
+                    <input type="text" className="form-control" placeholder="Image URL" value={prod.image || ''} onChange={e => handleItemChange('products', i, 'image', e.target.value)} />
+                    <input type="file" accept="image/*" onChange={e => handleImageUpload(i, e)} style={{ width: '120px' }} />
+                  </div>
+                </div>
+
+                <button onClick={() => handleRemoveItem('products', i)} className="btn btn-danger" style={{ alignSelf: 'flex-end', marginTop: '0.5rem' }}>Remove Product</button>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => handleAddItem('products', { title: 'New Product', price: 'MWK 0', image: 'placeholder.jpeg', link: '#', category: '' })} className="btn btn-primary" style={{ marginTop: '1.5rem' }}>Add Product</button>
         </div>
 
         {/* Features */}
-        <div style={{ flex: '1', minWidth: '300px', background: '#f9f9f9', padding: '1rem', borderRadius: '8px' }}>
+        <div className="card" style={{ gridColumn: '1 / -1' }}>
           <h3>Why Choose Us Features</h3>
           {content.features.map((feat, i) => (
-            <div key={feat.id} style={{ border: '1px solid #ccc', padding: '0.5rem', marginBottom: '1rem' }}>
-              <input type="text" placeholder="Title" value={feat.title} onChange={e => handleItemChange('features', i, 'title', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem' }} />
-              <textarea placeholder="Description" value={feat.description} onChange={e => handleItemChange('features', i, 'description', e.target.value)} style={{ width: '100%', marginBottom: '0.5rem', padding: '0.5rem' }} />
-              <button onClick={() => handleRemoveItem('features', i)} style={{ color: 'red' }}>Remove Feature</button>
+            <div key={feat.id} className="list-item">
+              <input type="text" className="form-control" placeholder="Title" value={feat.title || ''} onChange={e => handleItemChange('features', i, 'title', e.target.value)} />
+              <textarea className="form-control" placeholder="Description" value={feat.description || ''} onChange={e => handleItemChange('features', i, 'description', e.target.value)} />
+              <button onClick={() => handleRemoveItem('features', i)} className="btn btn-danger" style={{ alignSelf: 'flex-end' }}>Remove Feature</button>
             </div>
           ))}
-          <button onClick={() => handleAddItem('features', { title: 'New Feature', description: 'Description' })} style={{ padding: '0.5rem' }}>Add Feature</button>
+          <button onClick={() => handleAddItem('features', { title: 'New Feature', description: 'Description' })} className="btn btn-primary" style={{ marginTop: '1rem' }}>Add Feature</button>
         </div>
       </div>
       
-      <button onClick={handleSave} style={{ marginTop: '2rem', padding: '1rem 2rem', background: '#28A745', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '1.2rem', width: '100%' }}>
-        Save All Changes
-      </button>
+      <div style={{ marginTop: '2rem', textAlign: 'right' }}>
+        <button onClick={handleSave} className="btn btn-success" style={{ padding: '1rem 3rem', fontSize: '1.1rem' }}>
+          Save All Changes
+        </button>
+      </div>
     </div>
   );
 }

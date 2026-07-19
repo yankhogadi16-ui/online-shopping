@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import ContentManager from './components/ContentManager';
 import AdminManagement from './components/AdminManagement';
@@ -10,8 +10,9 @@ function PrivateRoute({ children }) {
   return token ? children : <Navigate to="/login" />;
 }
 
-function Layout({ children }) {
+function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -19,15 +20,30 @@ function Layout({ children }) {
     navigate('/login');
   };
 
+  const isActive = (path) => location.pathname === path ? 'active' : '';
+
   return (
-    <div>
-      <nav style={{ padding: '1rem', background: '#333', color: '#fff', display: 'flex', gap: '1rem' }}>
-        <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>Content</Link>
-        <Link to="/admins" style={{ color: '#fff', textDecoration: 'none' }}>Manage Admins</Link>
-        <Link to="/profile" style={{ color: '#fff', textDecoration: 'none' }}>Profile</Link>
-        <button onClick={handleLogout} style={{ marginLeft: 'auto', background: 'transparent', color: '#fff', border: '1px solid #fff', cursor: 'pointer' }}>Logout</button>
-      </nav>
-      <div style={{ padding: '2rem' }}>
+    <div className="sidebar">
+      <div className="sidebar-header">
+        Y Cool Admin
+      </div>
+      <div className="sidebar-nav">
+        <Link to="/" className={`sidebar-link ${isActive('/')}`}>Content Manager</Link>
+        <Link to="/admins" className={`sidebar-link ${isActive('/admins')}`}>Manage Admins</Link>
+        <Link to="/profile" className={`sidebar-link ${isActive('/profile')}`}>Profile Settings</Link>
+      </div>
+      <div className="sidebar-footer">
+        <button onClick={handleLogout} className="logout-btn">Log Out</button>
+      </div>
+    </div>
+  );
+}
+
+function Layout({ children }) {
+  return (
+    <div className="dashboard-layout">
+      <Sidebar />
+      <div className="main-content">
         {children}
       </div>
     </div>
