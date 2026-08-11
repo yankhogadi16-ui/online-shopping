@@ -311,7 +311,7 @@ footer{
 }
 
 .product-card img {
-    width: 100%;
+    width: 80%;
     height: 220px;
     object-fit: cover;
     border-radius: 5px;
@@ -319,8 +319,8 @@ footer{
 }
 
 .product-card h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 10px;
+    margin-bottom: 5px;
 }
 
 .price {
@@ -404,4 +404,20 @@ footer{
 
 .category-card h3 {
   color: #2b1d13;
+}
+.social-icons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.social-icons a {
+  color: #f5ecec;
+  font-size: 24px;
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: #e3e7ec; /* Change hover color */
 }
